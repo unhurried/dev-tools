@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysqld:
+    # https://hub.docker.com/_/mysql
+    image: mysql:5.7
+    restart: always
+    volumes:
+      # Persist database data in a volume. Need to use volumes instead of bind mounts in Windows.
+      # https://github.com/docker-library/mysql/issues/302#issuecomment-723257252
+      - mysqld-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - 3306:3306
+  adminer:
+    # https://hub.docker.com/_/adminer
+    image: adminer:4.8.1
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      # Change the design by specifying a pre-installed theme.
+      # https://www.adminer.org/#extras
+      ADMINER_DESIGN: pepa-linha
+
+volumes:
+  mysqld-data:
