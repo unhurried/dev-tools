@@ -2,7 +2,7 @@
 
 set -eu
 
-IMAGE='mysql-client'
+IMAGE='postfix-for-development'
 
 function build() {
     # Add the following options to use a proxy server.
@@ -17,12 +17,11 @@ function run() {
     # Add the following options to use a proxy server.
     # --env http_proxy=http://example.com:80 \
     # --env https_proxy=http://example.com:80 \
-    docker run -it --rm \
+    docker run --rm -d \
+        -p 25:25 \
         --name "${IMAGE}" \
-        -v `pwd`/script:/root/script \
         --add-host=host.docker.internal:host-gateway \
-        "${IMAGE}" \
-        /root/script/init.sh
+        "${IMAGE}"
 }
 
 if [ "$(docker image ls -q "${IMAGE}")" ]; then
